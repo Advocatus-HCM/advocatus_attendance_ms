@@ -1,5 +1,6 @@
-const express = require('express')
-const app = express()
+import app from './bootstrap.js'
 const port = 8000
 
-app.listen(port, () => console.log(`App listening on port ${port}!`))
+await app.init()
+
+app.express.listen(port, () => console.log(`App listening on port ${port}!`))
