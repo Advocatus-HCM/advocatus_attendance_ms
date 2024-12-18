@@ -37,5 +37,5 @@ export const create_user_request = {
     isString: true,
     isIn: { options: [USER.ROLES] },
     notEmpty: true,
-  }
+  },
 };

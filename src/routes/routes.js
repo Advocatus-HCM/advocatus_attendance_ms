@@ -1,9 +1,11 @@
 import { Router } from "express"
+import validate from "../request/validator.js";
 import * as user_controller from "../controller/user.js"
+import * as assistant_controller from "../controller/assistant.js";
 import { health_check } from "../controller/server.js";
 import { create_user_request } from "../request/create_user_request.js";
 import { update_user_request } from "../request/update_user_request.js";
-import validate from "../request/validator.js";
+import { add_assistant_request } from "../request/add_assistant_request.js";
 
 const router = Router()
 
@@ -12,8 +14,8 @@ router.post("/create-user", validate(create_user_request), user_controller.creat
 router.delete("/delete-user/:user_id", user_controller.delete_user);
 router.patch("/update-user/:user_id", validate(update_user_request), user_controller.update_user);
 
-// router.get("/get-assistant", validate(user_request), get_assistant);
-// router.post("/add-assistant", validate(user_request), add_assistant);
+router.get("/get-assistants/:user_id", assistant_controller.get_assistants);
+router.post("/add-assistant", validate(add_assistant_request), assistant_controller.add_assistant);
 // router.delete("/remove-assistant", validate(user_request), remove_assistant);
 
 // router.get("/get-members", validate(user_request), get_member);

@@ -1,15 +1,19 @@
 import { init_user_model } from "../model/user.js"
 import { pm_log } from "../utils/server.js"
 
-let user_model = null
-
 export const create_user = async (user) => {
     try {
         user.is_deleted = false
         
-        user_model = await init_user_model()
+        const user_model = await init_user_model()
         await user_model.insertOne(user)
 
+        const result = {
+          email: user.email,
+          role: user.role
+        };
+
+        return result
     } catch (error) {
         pm_log('User Service: ' + error, true)
         throw new Error(error)
@@ -19,7 +23,7 @@ export const create_user = async (user) => {
 export const get_user = async (user_id) => {
   try {
 
-    user_model = await init_user_model();
+    const user_model = await init_user_model();
     return await user_model.findOne({
       email: user_id,
       is_deleted: false
@@ -34,7 +38,7 @@ export const get_user = async (user_id) => {
 export const delete_user = async (user_id) => {
   try {
 
-    user_model = await init_user_model()
+    const user_model = await init_user_model();
     const is_user_deleted = await user_model.updateOne(
       { 
         email: user_id, is_deleted: false 
@@ -54,7 +58,7 @@ export const delete_user = async (user_id) => {
 
 export const update_user = async (user_id, updated_user) => {
   try {
-    user_model = await init_user_model();
+    const user_model = await init_user_model();
     const is_user_updated = await user_model.updateOne(
       {
         email: user_id,

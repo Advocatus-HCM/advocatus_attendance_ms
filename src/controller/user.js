@@ -4,8 +4,8 @@ import * as user_service from "../service/user.js";
 export const create_user = async (req, res) => {
     try {
 
-        await user_service.create_user(req.body)
-        return res.status(200).send("User inserted succesfully")
+        const result = await user_service.create_user(req.body)
+        return res.status(200).json(result);
 
     } catch (error) {
         pm_log(error, true)
