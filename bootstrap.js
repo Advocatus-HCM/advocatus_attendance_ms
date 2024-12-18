@@ -3,6 +3,7 @@ import router from './src/routes/routes.js'
 import "dotenv/config"
 import { MongoClient } from 'mongodb'
 import { get_env_variable, pm_log } from './src/utils/server.js'
+import { init_user_model } from './src/model/user.js'
 
 const init_app = async () => {
     app.express = express()
@@ -17,6 +18,15 @@ const init_mongo = async () => {
     try {
         
         app.database = client.db(get_env_variable("MONGO_DB_NAME"));
+
+        const user_collection = await init_user_model()
+        user_collection.createIndex(
+          { email: 1 },
+          {
+            partialFilterExpression: { is_deleted: false },
+            unique: true,
+          }
+        )
 
         pm_log("Database connection succed")
 
