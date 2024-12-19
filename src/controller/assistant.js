@@ -32,3 +32,18 @@ export const get_assistants = async (req, res) => {
     return res.status(500).json(error.message);
   }
 };
+
+export const remove_assistant = async (req, res) => {
+  try {
+    const result = await assistant_service.remove_assistant(req.body.assistant_email, req.body.user_email);
+
+    if (!result) {
+      return res.status(422).json({ message: "Invalid data" });
+    }
+
+    return res.status(200).json({ message: "Assistant removed successfully" });
+  } catch (error) {
+    pm_log(error, true);
+    return res.status(500).json(error.message);
+  }
+};

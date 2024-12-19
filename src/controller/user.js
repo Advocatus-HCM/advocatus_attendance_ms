@@ -61,3 +61,18 @@ export const update_user = async (req, res) => {
     return res.status(500).json(error.message);
   }
 };
+
+export const get_roles = async (req, res) => {
+  try {
+    const result = await user_service.get_roles();
+
+    if (!result) {
+      return res.status(422).json({ message: "No changes applied" });
+    }
+
+    return res.status(200).json({ message: "User updated successfully" });
+  } catch (error) {
+    pm_log(error, true);
+    return res.status(500).json(error.message);
+  }
+};

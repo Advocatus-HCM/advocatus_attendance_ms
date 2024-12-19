@@ -60,3 +60,37 @@ export const get_assistants = async (user_id) => {
     throw new Error(error);
   }
 };
+
+export const remove_assistant = async (assistant_id, user_id) => {
+  try {
+    if (assistant_id == user_id) {
+      return false;
+    }
+
+    const user_model = await init_user_model();
+    const exists_user = await user_model.findOne({
+      email: user_id,
+      is_deleted: false,
+    });
+
+    if (!exists_user) {
+      return false;
+    }
+
+    const is_assistant_removed = await user_model.updateOne(
+      {
+        email: assistant_id,
+        role: "asistente",
+        is_deleted: false,
+      },
+      {
+        $unset: { assist_to: null },
+      }
+    );
+
+    return is_assistant_removed.modifiedCount ? true : false;
+  } catch (error) {
+    pm_log("Assistant Service: " + error, true);
+    throw new Error(error);
+  }
+};

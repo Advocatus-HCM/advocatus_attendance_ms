@@ -1,3 +1,4 @@
+import USER from "../constant/user.js"
 import { init_user_model } from "../model/user.js"
 import { pm_log } from "../utils/server.js"
 
@@ -70,6 +71,17 @@ export const update_user = async (user_id, updated_user) => {
     );
 
     return is_user_updated.modifiedCount ? true : false;
+  } catch (error) {
+    pm_log("User Service: " + error, true);
+    throw new Error(error);
+  }
+};
+
+export const get_roles = async (user_id, updated_user) => {
+  try {
+    const roles = USER.ROLES;
+
+    return roles;
   } catch (error) {
     pm_log("User Service: " + error, true);
     throw new Error(error);
