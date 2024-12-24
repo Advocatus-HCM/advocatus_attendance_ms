@@ -2,11 +2,14 @@ import { Router } from "express"
 import validate from "../request/validator.js";
 import * as user_controller from "../controller/user.js"
 import * as assistant_controller from "../controller/assistant.js";
+import * as team_controller from "../controller/team.js";
 import { health_check } from "../controller/server.js";
 import { create_user_request } from "../request/create_user_request.js";
 import { update_user_request } from "../request/update_user_request.js";
 import { add_assistant_request } from "../request/add_assistant_request.js";
 import { remove_assistant_request } from "../request/remove_assistant_request.js";
+import { create_team_request } from "../request/create_team_request.js";
+import { update_team_request } from "../request/update_team_request.js";
 
 const router = Router()
 
@@ -20,14 +23,15 @@ router.get("/get-assistants/:user_id", assistant_controller.get_assistants);
 router.post("/add-assistant", validate(add_assistant_request), assistant_controller.add_assistant);
 router.delete("/remove-assistant", validate(remove_assistant_request), assistant_controller.remove_assistant);
 
+router.get("/get-team/:team_name", team_controller.get_team);
+router.get("/get-teams", team_controller.get_teams);
+ router.post("/create-team", validate(create_team_request), team_controller.create_team);
+ router.patch("/update-team/:team_name", validate(update_team_request), team_controller.update_team);
+router.delete("/delete-team/:team_name", team_controller.delete_team);
+
 // router.get("/get-members", validate(user_request), get_member);
 // router.post("/add-member", validate(user_request), add_member);
 // router.delete("/remove-member", validate(user_request), remove_member);
-
-// router.get("/get-team", validate(user_request), get_team);
-// router.post("/add-team", validate(user_request), add_team);
-// router.patch("/update-team", validate(user_request), update_team);
-// router.delete("/remove-team", validate(user_request), remove_team);
 
 // router.delete("/get-contract", validate(user_request), get_contract);
 // router.get("/add-contract", validate(user_request), add_contract);
