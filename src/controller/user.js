@@ -30,6 +30,17 @@ export const get_user = async (req, res) => {
   }
 };
 
+export const get_users = async (req, res) => {
+  try {
+    const users = await user_service.get_users();
+
+    return res.status(200).json(users);
+  } catch (error) {
+    pm_log(error, true);
+    return res.status(500).json(error.message);
+  }
+};
+
 export const delete_user = async (req, res) => {
   try {
 
@@ -66,11 +77,18 @@ export const get_roles = async (req, res) => {
   try {
     const result = await user_service.get_roles();
 
-    if (!result) {
-      return res.status(422).json({ message: "No changes applied" });
-    }
+    return res.status(200).json(result);
+  } catch (error) {
+    pm_log(error, true);
+    return res.status(500).json(error.message);
+  }
+};
 
-    return res.status(200).json({ message: "User updated successfully" });
+export const get_professions = async (req, res) => {
+  try {
+    const result = await user_service.get_professions();
+
+    return res.status(200).json(result);
   } catch (error) {
     pm_log(error, true);
     return res.status(500).json(error.message);

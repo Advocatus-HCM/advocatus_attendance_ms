@@ -1,5 +1,7 @@
 const PM_COLLECTIONS = {
-  USER: "test",
+  USER: "users",
+  TEAM: "teams",
+  CONTRACT: "contracts"
 };
 
 export default PM_COLLECTIONS
