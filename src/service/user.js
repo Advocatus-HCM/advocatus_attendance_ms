@@ -25,11 +25,36 @@ export const get_user = async (user_id) => {
   try {
 
     const user_model = await init_user_model();
-    return await user_model.findOne({
+    const user = await user_model.findOne({
       email: user_id,
       is_deleted: false
     });
 
+    if (!user) throw new Error("User not found");
+
+    return user
+
+  } catch (error) {
+    pm_log("User Service: " + error, true);
+    throw new Error(error);
+  }
+};
+
+export const get_users = async () => {
+  try {
+    const user_model = await init_user_model();
+    const users = await user_model.find(
+      {
+        is_deleted: false,
+      },
+      {
+        projection: {_id: 0}
+      }
+    ).toArray();
+
+    if (users.length == 0) throw new Error("Users not found");
+
+    return users;
   } catch (error) {
     pm_log("User Service: " + error, true);
     throw new Error(error);
@@ -77,11 +102,23 @@ export const update_user = async (user_id, updated_user) => {
   }
 };
 
-export const get_roles = async (user_id, updated_user) => {
+export const get_roles = async () => {
   try {
     const roles = USER.ROLES;
 
     return roles;
+  } catch (error) {
+    pm_log("User Service: " + error, true);
+    throw new Error(error);
+  }
+};
+
+export const get_professions = async () => {
+  try {
+    const user_model = await init_user_model();
+    const professions = user_model.distinct("profession");
+
+    return professions;
   } catch (error) {
     pm_log("User Service: " + error, true);
     throw new Error(error);
