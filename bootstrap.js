@@ -1,4 +1,5 @@
 import express from 'express'
+import cors from "cors";
 import router from './src/routes/routes.js'
 import "dotenv/config"
 import { MongoClient } from 'mongodb'
@@ -9,7 +10,8 @@ import { init_contract_model } from "./src/model/contract.js";
 
 const init_app = async () => {
     app.express = express()
-    app.express.use(express.json());
+    app.express.use(express.json())
+    app.express.use(cors())
     app.express.use(router)
 }
 
