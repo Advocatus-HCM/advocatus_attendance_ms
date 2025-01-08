@@ -1,5 +1,5 @@
 import app from './bootstrap.js'
-const port = 8000
+const port = 8001
 
 await app.init()
 
