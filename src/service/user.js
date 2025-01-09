@@ -5,6 +5,7 @@ import { pm_log } from "../utils/server.js"
 export const create_user = async (user) => {
     try {
         user.is_deleted = false
+        user.role = "desactivado"
         
         const user_model = await init_user_model()
         await user_model.insertOne(user)

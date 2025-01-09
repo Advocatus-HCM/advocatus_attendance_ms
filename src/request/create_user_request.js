@@ -1,5 +1,3 @@
-import USER from "../constant/user.js";
-
 export const create_user_request = {
   name: {
     isString: true,
@@ -32,10 +30,5 @@ export const create_user_request = {
     optional: true,
     isString: true,
     notEmpty: true,
-  },
-  role: {
-    isString: true,
-    isIn: { options: [USER.ROLES] },
-    notEmpty: true,
-  },
+  }
 };

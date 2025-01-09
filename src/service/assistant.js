@@ -61,6 +61,38 @@ export const get_assistants = async (user_id) => {
   }
 };
 
+export const get_all_assistants = async () => {
+  try {
+    const user_model = await init_user_model();
+    const assistants = await user_model
+      .find(
+        {
+          role: "asistente",
+          assist_to: { $exists: true },
+          is_deleted: false,
+        },
+        {
+          projection: { _id: 0, email: 1, assist_to: 1 },
+        }
+      )
+      .toArray();
+
+    if (!assistants.length) {
+      return false;
+    }
+
+    const result = {
+      quantity: assistants.length,
+      assistants: assistants,
+    };
+
+    return result;
+  } catch (error) {
+    pm_log("Assistant Service: " + error, true);
+    throw new Error(error);
+  }
+};
+
 export const remove_assistant = async (assistant_id, user_id) => {
   try {
     if (assistant_id == user_id) {
