@@ -31,7 +31,7 @@ export const get_teams = async (team_name = null) => {
     const teams = await team_model
       .find({
         is_deleted: false
-      }, { projection: { name: 1, _id: 0 } })
+      }, { projection: { _id: 0, is_deleted: 0 } })
       .toArray();
 
     return teams;
@@ -51,6 +51,7 @@ export const get_team = async (team_name) => {
   if (!team) throw new Error("Team not found");
 
   delete team._id
+  delete team.is_deleted
 
   return team;
 };

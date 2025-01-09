@@ -33,6 +33,21 @@ export const get_assistants = async (req, res) => {
   }
 };
 
+export const get_all_assistants = async (req, res) => {
+  try {
+    const result = await assistant_service.get_all_assistants();
+
+    if (!result) {
+      return res.status(404).json({ message: "Not found" });
+    }
+
+    return res.status(200).json(result);
+  } catch (error) {
+    pm_log(error, true);
+    return res.status(500).json(error.message);
+  }
+};
+
 export const remove_assistant = async (req, res) => {
   try {
     const result = await assistant_service.remove_assistant(req.body.assistant_email, req.body.user_email);
