@@ -29,7 +29,9 @@ export const get_teams = async (team_name = null) => {
     const team_model = await init_team_model();
 
     const teams = await team_model
-      .find({}, { projection: { name: 1, _id: 0 } })
+      .find({
+        is_deleted: false
+      }, { projection: { name: 1, _id: 0 } })
       .toArray();
 
     return teams;
