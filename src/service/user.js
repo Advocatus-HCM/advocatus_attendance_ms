@@ -117,7 +117,10 @@ export const get_roles = async () => {
 export const get_professions = async () => {
   try {
     const user_model = await init_user_model();
-    const professions = user_model.distinct("profession");
+    const professions = await user_model.aggregate([
+      { $match: { is_deleted: false } },
+      { $group: { _id: "$profession" } }
+    ]).toArray();
 
     return professions;
   } catch (error) {

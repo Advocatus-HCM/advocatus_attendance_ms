@@ -88,6 +88,10 @@ export const get_professions = async (req, res) => {
   try {
     const result = await user_service.get_professions();
 
+    if (!result.length) {
+      return res.status(404).json({message: "Not professions found"})
+    }
+
     return res.status(200).json(result);
   } catch (error) {
     pm_log(error, true);
