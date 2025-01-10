@@ -78,6 +78,7 @@ export const get_types = async () => {
 export const update_contract = async (new_data, contract_id) => {
   try {
     const contract_model = await init_contract_model();
+    const user_model = await init_user_model();
     const contract = await contract_model.findOne({
       user_email: contract_id,
       is_deleted: false,
@@ -86,7 +87,6 @@ export const update_contract = async (new_data, contract_id) => {
     if (!contract) throw new Error("Contract not found")
 
     if(new_data.user_email) {
-        const user_model = await init_user_model();
         const is_user_updated = await user_model.updateOne(
             {
                 email: new_data.user_email,
@@ -113,6 +113,20 @@ export const update_contract = async (new_data, contract_id) => {
             },
             }
         );
+    }
+
+    if (new_data.role) {
+      user_model.updateOne(
+        {
+          email: contract_id,
+          is_deleted: false,
+        },
+        {
+          $set: {
+              role: new_data.role,
+          },
+        }
+      )
     }
 
     const new_contract = await contract_model.updateOne(
