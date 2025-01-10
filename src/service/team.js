@@ -60,12 +60,14 @@ export const update_team = async (team_name, new_data) => {
   try {
     const team_model = await init_team_model()
     const current_team = await get_team(team_name)
+    let leader_updated = false
 
     if (new_data.leader && (current_team.leader != new_data.leader)){
       await update_leader(
         new_data.leader,
         new_data.name ? new_data.name : current_team.name
       );
+      leader_updated = true
       delete new_data.leader
     }
 
@@ -78,7 +80,7 @@ export const update_team = async (team_name, new_data) => {
       }
     );
 
-    return is_team_updated.modifiedCount ? true : false;
+    return is_team_updated.modifiedCount || leader_updated ? true : false;
   } catch (error) {
     pm_log("Team Service: " + error, true);
     throw new Error(error);
