@@ -1,7 +1,7 @@
 import USER from "../constant/user.js"
 import { init_contract_model } from "../model/contract.js"
 import { init_user_model } from "../model/user.js"
-import { get_current_date } from "../utils/format.js"
+import * as util_service from "../utils/format.js"
 import { pm_log } from "../utils/server.js"
 
 export const create_user = async (user) => {
@@ -69,6 +69,16 @@ export const delete_user = async (user_id) => {
 
     const user_model = await init_user_model();
     const contract_model = await init_contract_model();
+    let current_date = util_service.get_current_date()
+    const contract = await contract_model.findOne({
+      user_email: user_id,
+      is_deleted: false
+    })
+
+    if ((util_service.is_date_greater(contract.start_date, current_date))) {
+      current_date = contract.start_date
+    }
+    
     await contract_model.updateOne(
       {
       user_email: user_id,
@@ -76,7 +86,7 @@ export const delete_user = async (user_id) => {
       },
       {
         $set: {
-          end_date: get_current_date()
+          end_date: current_date
         }
       }
     )
