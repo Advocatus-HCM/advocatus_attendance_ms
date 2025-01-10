@@ -32,3 +32,10 @@ export const difference_between_dates = (start_date, end_date) => {
 
   return months;
 }
+
+export const is_date_greater = (date1, date2) => {
+  const first_date = new Date(date1);
+  const second_date = new Date(date2);
+
+  return first_date > second_date;
+}
