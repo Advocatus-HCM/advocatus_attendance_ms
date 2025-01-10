@@ -7,10 +7,6 @@ export const update_contract_request = {
     notEmpty: true,
     optional: true,
   },
-  duration: {
-    isDecimal: true,
-    optional: true,
-  },
   type: {
     isString: true,
     isIn: { options: [CONTRACT.TYPES] },

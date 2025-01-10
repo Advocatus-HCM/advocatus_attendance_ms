@@ -6,10 +6,6 @@ export const create_contract_request = {
     isEmail: true,
     notEmpty: true,
   },
-  duration: {
-    isDecimal: true,
-    optional: true,
-  },
   type: {
     isString: true,
     isIn: { options: [CONTRACT.TYPES] },
