@@ -119,8 +119,10 @@ export const get_professions = async () => {
     const user_model = await init_user_model();
     const professions = await user_model.aggregate([
       { $match: { is_deleted: false } },
-      { $group: { _id: "$profession" } }
-    ]).toArray();
+      { $group: { _id: "$profession" } },
+      { $project: { _id: 0, profession: "$_id" } }  // Proyecta solo el campo "profession"
+    ]).map(doc => doc.profession).toArray();
+
 
     return professions;
   } catch (error) {
