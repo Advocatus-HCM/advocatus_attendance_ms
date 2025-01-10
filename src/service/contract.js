@@ -83,6 +83,8 @@ export const update_contract = async (new_data, contract_id) => {
       is_deleted: false,
     });
 
+    if (!contract) throw new ("Contract not found")
+
     if(new_data.user_email) {
         const user_model = await init_user_model();
         const is_user_updated = await user_model.updateOne(
