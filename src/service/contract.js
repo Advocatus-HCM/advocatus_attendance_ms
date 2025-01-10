@@ -1,12 +1,18 @@
 import CONTRACT from "../constant/contract.js";
 import { init_contract_model } from "../model/contract.js";
 import { init_user_model } from "../model/user.js";
+import * as util_service from "../utils/format.js";
 import { pm_log } from "../utils/server.js";
 
 export const create_contract = async (contract) => {
   try {
     contract.is_deleted = false;
 
+    if (!(util_service.validate_dates(contract.start_date, contract.end_date))) throw new Error("Invalid dates")
+    if (!(util_service.validate_dates(contract.start_date, contract.probation_end_date))) throw new Error("Invalid dates")
+
+    contract.contract_duration = util_service.difference_between_dates(contract.start_date, contract.end_date)
+    contract.probation_duration = util_service.difference_between_dates(contract.start_date, contract.probation_end_date)
     const user_model = await init_user_model();
     const is_user_updated = await user_model.updateOne(
       {
@@ -42,6 +48,8 @@ export const get_contract = async (contract_id) => {
       user_email: contract_id,
       is_deleted: false,
     });
+
+    if (contract) delete contract._id
 
     return contract;
   } catch (error) {
@@ -128,6 +136,19 @@ export const update_contract = async (new_data, contract_id) => {
         }
       )
     }
+
+    if (new_data.end_date || new_data.start_date || new_data.probation_end_date) {
+      const start_date = new_data.start_date ? new_data.start_date : contract.start_date;
+      const end_date = new_data.end_date ? new_data.end_date : contract.end_date;
+      const probation_end_date = new_data.probation_end_date ? new_data.probation_end_date : contract.probation_end_date;
+
+      util_service.validate_dates(start_date, end_date)
+      util_service.validate_dates(start_date, probation_end_date)
+      
+      new_data.contract_duration = util_service.difference_between_dates(start_date, end_date);
+      new_data.probation_duration = util_service.difference_between_dates(start_date, probation_end_date);
+    }
+
 
     const new_contract = await contract_model.updateOne(
       {
