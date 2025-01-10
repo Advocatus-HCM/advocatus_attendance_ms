@@ -3,7 +3,6 @@ import * as user_service from "../service/user.js";
 
 export const create_user = async (req, res) => {
     try {
-
         const result = await user_service.create_user(req.body)
         return res.status(200).json(result);
 
@@ -15,7 +14,6 @@ export const create_user = async (req, res) => {
 
 export const get_user = async (req, res) => {
   try {
-
     const user = await user_service.get_user(req.params.user_id);
 
     if(!user){
@@ -43,7 +41,6 @@ export const get_users = async (req, res) => {
 
 export const delete_user = async (req, res) => {
   try {
-
     const result = await user_service.delete_user(req.params.user_id);
 
     if(!result){

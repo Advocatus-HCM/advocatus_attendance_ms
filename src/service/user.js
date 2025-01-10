@@ -7,7 +7,10 @@ import { pm_log } from "../utils/server.js"
 export const create_user = async (user) => {
     try {
         user.is_deleted = false
+        user.active = false
         user.role = "desactivado"
+
+        if (user.superior) await validate_superior(user.superior)
         
         const user_model = await init_user_model()
         await user_model.insertOne(user)
@@ -69,13 +72,13 @@ export const delete_user = async (user_id) => {
 
     const user_model = await init_user_model();
     const contract_model = await init_contract_model();
-    let current_date = util_service.get_current_date()
+    let current_date = util_service.get_current_date();
     const contract = await contract_model.findOne({
       user_email: user_id,
       is_deleted: false
     })
 
-    if ((util_service.is_date_greater(contract.start_date, current_date))) {
+    if (contract && util_service.is_date_greater(contract.start_date, current_date)) {
       current_date = contract.start_date
     }
     
@@ -111,6 +114,9 @@ export const delete_user = async (user_id) => {
 export const update_user = async (user_id, updated_user) => {
   try {
     const user_model = await init_user_model();
+
+    if (update_user.superior) await validate_superior(update_user.superior)
+
     const is_user_updated = await user_model.updateOne(
       {
         email: user_id,
@@ -155,3 +161,18 @@ export const get_professions = async () => {
     throw new Error(error);
   }
 };
+
+const validate_superior = async (superior_email) => {
+    const user_model = await init_user_model();
+    const superior = await user_model.findOne({
+      email: superior_email, 
+      role: "gerente",
+      is_deleted: false
+    })
+
+    if (!superior) {
+      throw new Error("Manager does not exists")
+    }
+
+    return true
+}

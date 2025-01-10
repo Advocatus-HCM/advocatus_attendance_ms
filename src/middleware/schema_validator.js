@@ -1,6 +1,6 @@
 import { checkSchema, validationResult } from "express-validator";
 
-const validate = (schema) => {
+const validate_schema = (schema) => {
   return [
     // Middleware to sanitize the request body
     (req, res, next) => {
@@ -32,4 +32,4 @@ const sanitizeRequestBody = (schema, body) => {
     }, {});
 };
 
-export default validate;
+export default validate_schema;
