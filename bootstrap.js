@@ -3,7 +3,7 @@ import cors from "cors";
 import router from './src/routes/routes.js'
 import "dotenv/config"
 import { MongoClient } from 'mongodb'
-import { get_env_variable, pm_log } from './src/utils/server.js'
+import { create_admin_user_with_contract, get_env_variable, pm_log } from './src/utils/server.js'
 import { init_user_model } from './src/model/user.js'
 import { init_team_model } from './src/model/team.js'
 import { init_contract_model } from "./src/model/contract.js";
@@ -50,6 +50,8 @@ const init_mongo = async () => {
             unique: true,
           }
         );
+
+        create_admin_user_with_contract()
 
         pm_log("Database connection succed")
 

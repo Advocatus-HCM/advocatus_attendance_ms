@@ -8,6 +8,7 @@ export const create_contract = async (contract) => {
   try {
     contract.is_deleted = false;
 
+    if(contract.type != "indefinido" && !contract.end_date) throw new Error("That contract type must has end date")
     if (!(util_service.validate_dates(contract.start_date, contract.end_date))) throw new Error("Invalid dates")
     if (!(util_service.validate_dates(contract.start_date, contract.probation_end_date))) throw new Error("Invalid dates")
 
@@ -61,9 +62,11 @@ export const get_contract = async (contract_id) => {
 export const get_contracts = async () => {
   try {
     const contract_model = await init_contract_model();
-    const contracts = await contract_model.find({
-        is_deleted: false
-    }).toArray();
+    const contracts = await contract_model.find(
+      { is_deleted: false },
+      { projection: { _id: 0 } }
+    ).toArray();
+
 
     return contracts;
   } catch (error) {
