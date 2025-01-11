@@ -16,9 +16,10 @@ import { add_memebers_request } from "../request/add_memebers_request.js";
 import { remove_member_request } from "../request/remove_member_request.js";
 import { create_contract_request } from "../request/create_contract_request.js";
 import { update_contract_request } from "../request/update_contract_request.js";
+import { active_validator } from "../middleware/active_validator.js";
 
 const router = Router()
-// router.use(active_validator);
+router.use(active_validator);
 
 router.get("/get-user/:user_id", user_controller.get_user);
 router.get("/get-users", user_controller.get_users);

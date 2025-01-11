@@ -19,7 +19,6 @@ export const create_contract_request = {
   start_date: {
     isDate: true,
     notEmpty: true,
-    optional: true,
   },
   end_date: {
     isDate: true,

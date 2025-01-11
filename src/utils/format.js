@@ -7,20 +7,32 @@ export const get_current_date = () => {
 }
 
 export const validate_dates = (start_date, end_date) => {
+  const stripTime = (date) => date.toISOString().split('T')[0];
+
+  const today = stripTime(new Date());
+  const start = stripTime(new Date(start_date));
+
+  if (!end_date && start === today) {
+    return true;
+  }
+
   const regex = /^\d{4}-\d{2}-\d{2}$/;
-  if (!regex.test(start_date) || !regex.test(end_date)) return false;
+  if (!regex.test(start_date) || (end_date && !regex.test(end_date))) return false;
 
-  const today = new Date();
-  const start = new Date(start_date);
-  const end = new Date(end_date);
+  const end = stripTime(new Date(end_date));
 
-  if (start < today || end < today) throw new Error("Dates can not be in the past");
-  if (end < start) throw new Error("End dates are before start date");
+  if (start < today || end < today) throw new Error("Dates cannot be in the past");
+  if (end < start) throw new Error("End date is before start date");
 
   return true;
-}
+};
 
 export const difference_between_dates = (start_date, end_date) => {
+
+  if (!end_date) {
+    return "indefinido"
+  }
+
   const start = new Date(start_date);
   const end = new Date(end_date);
 
@@ -34,8 +46,10 @@ export const difference_between_dates = (start_date, end_date) => {
 }
 
 export const is_date_greater = (date1, date2) => {
-  const first_date = new Date(date1);
-  const second_date = new Date(date2);
+  const stripTime = (date) => new Date(date.toISOString().split('T')[0]);
+
+  const first_date = stripTime(new Date(date1));
+  const second_date = stripTime(new Date(date2));
 
   return first_date > second_date;
-}
+};
