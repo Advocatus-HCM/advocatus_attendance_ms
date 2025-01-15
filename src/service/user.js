@@ -2,6 +2,7 @@ import USER from "../constant/user.js"
 import { init_contract_model } from "../model/contract.js"
 import { init_user_model } from "../model/user.js"
 import * as util_service from "../utils/format.js"
+import * as team_service from "./team.js"
 import { pm_log } from "../utils/server.js"
 
 export const create_user = async (user) => {
@@ -11,6 +12,7 @@ export const create_user = async (user) => {
         user.role = USER.ROLES.unactive
 
         if (user.superior) await validate_superior(user.superior)
+        if (user.team) await team_service.get_team(user.team)
         
         const user_model = await init_user_model()
         await user_model.insertOne(user)
@@ -117,7 +119,8 @@ export const update_user = async (user_id, updated_user) => {
   try {
     const user_model = await init_user_model();
 
-    if (update_user.superior) await validate_superior(update_user.superior)
+    if (updated_user.superior) await validate_superior(updated_user.superior)
+    if (updated_user.team) await team_service.get_team(updated_user.team)
 
     const is_user_updated = await user_model.updateOne(
       {

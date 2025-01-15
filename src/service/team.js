@@ -63,7 +63,7 @@ export const update_team = async (team_name, new_data) => {
     const current_team = await get_team(team_name)
     let leader_updated = false
 
-    if (new_data.leader && (current_team.leader != new_data.leader)){
+    if (new_data.leader){
       await update_leader(
         new_data.leader,
         new_data.name ? new_data.name : current_team.name
@@ -116,11 +116,8 @@ export const delete_team = async (team_name) => {
 export const add_member = async (member_email, team_name) => {
   try {
     const user_model = await init_user_model();
-    const user = await user_service.get_user(member_email)
-    const user_team = user.team ? await get_team(user.team) : null
+    await user_service.get_user(member_email)
     await get_team(team_name)
-
-    if(user.email == user_team?.leader) throw new Error("User is leader of other team")
 
     const is_member_added = await user_model.updateOne(
       {
@@ -143,9 +140,7 @@ export const remove_member = async (member_email, team_name) => {
   try {
     const user_model = await init_user_model()
     const member = await user_service.get_user(member_email)
-    const current_team = member.team ? await get_team(member.team) : null
 
-    if (member.email == current_team.leader) throw new Error("Can not remove leader")
     if (member.team != team_name) throw new Error("User is not in the team")
 
     await user_model.updateOne(
@@ -167,9 +162,13 @@ export const remove_member = async (member_email, team_name) => {
 
 export const update_leader = async (new_leader, team_name) => {
   const team_model = await init_team_model();
-  const user_model = await init_user_model();
-  await user_service.get_user(new_leader, USER.ROLES.manager)
-  await get_team(team_name)
+  const user = await user_service.get_user(new_leader, USER.ROLES.manager)
+  const team = await get_team(team_name)
+  const current_user_team = user.team ? await get_team(user.team) : null
+
+  if (user.role != USER.ROLES.manager) throw new Error("User is not a manager")
+  if (team?.leader == user.email) throw new Error("User is already leader of this team")
+  if (current_user_team?.leader == user.email) throw new Error("User is already leader of other team")
 
   await team_model.updateOne(
     {
@@ -180,16 +179,6 @@ export const update_leader = async (new_leader, team_name) => {
       $set: { leader: new_leader }
     }
   )
-  await user_model.updateOne(
-    {
-      email: new_leader,
-      role: USER.ROLES.manager, 
-      is_deleted: false,
-    },
-    {
-      $set: { team: team_name },
-    }
-  );
 }
 
 export const remove_all_members = async (team_name) => {
@@ -242,3 +231,21 @@ export const get_members = async (team_name) => {
 
   return members;
 };
+
+export const get_leader_teams = async (leader_email) => {
+  const team_model = await init_team_model();
+  const teams = await team_model
+    .find(
+      {
+        leader: leader_email,
+        is_deleted: false,
+      },
+      {
+        projection: { _id: 0, is_deleted: 0 }
+      }
+    ).toArray();
+
+  if(teams.length == 0) throw new Error("No teams found")
+
+  return teams;
+}
