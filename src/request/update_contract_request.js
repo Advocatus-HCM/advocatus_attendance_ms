@@ -9,7 +9,7 @@ export const update_contract_request = {
   },
   type: {
     isString: true,
-    isIn: { options: Object.values(CONTRACT.TYPES) },
+    isIn: { options: [Object.values(CONTRACT.TYPES)] },
     notEmpty: true,
     optional: true,
   },
@@ -36,7 +36,7 @@ export const update_contract_request = {
   },
   role: {
     isString: true,
-    isIn: { options: Object.values(USER.ROLES) },
+    isIn: { options: [Object.values(USER.ROLES)] },
     notEmpty: true,
     optional: true,
   },

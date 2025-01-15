@@ -8,7 +8,7 @@ export const create_contract_request = {
   },
   type: {
     isString: true,
-    isIn: { options: Object.values(CONTRACT.TYPES) },
+    isIn: { options: [Object.values(CONTRACT.TYPES)] },
     notEmpty: true,
   },
   salary: {
@@ -31,7 +31,7 @@ export const create_contract_request = {
   },
   role: {
     isString: true,
-    isIn: { options: Object.values(USER.ROLES) },
+    isIn: { options: [Object.values(USER.ROLES)] },
     notEmpty: true,
   },
 };
