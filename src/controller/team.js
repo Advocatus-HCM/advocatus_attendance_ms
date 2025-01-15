@@ -124,3 +124,14 @@ export const remove_member = async (req, res) => {
     return res.status(500).json(error.message);
   }
 };
+
+export const get_leader_teams = async (req, res) => {
+  try {
+    const result = await team_service.get_leader_teams(req.params.leader_email);
+
+    return res.status(200).json(result);
+  } catch (error) {
+    pm_log(error, true);
+    return res.status(500).json(error.message);
+  }
+}

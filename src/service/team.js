@@ -233,6 +233,7 @@ export const get_members = async (team_name) => {
 };
 
 export const get_leader_teams = async (leader_email) => {
+  console.log(leader_email);
   const team_model = await init_team_model();
   const teams = await team_model
     .find(

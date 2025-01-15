@@ -36,6 +36,7 @@ router.delete("/remove-assistant", validate_schema(remove_assistant_request), as
 
 router.get("/get-team/:team_name", team_controller.get_team);
 router.get("/get-teams", team_controller.get_teams);
+router.get("/get-leader-teams/:leader_email", team_controller.get_leader_teams);
 router.post("/create-team", validate_schema(create_team_request), team_controller.create_team);
 router.patch("/update-team/:team_name", validate_schema(update_team_request), team_controller.update_team);
 router.delete("/delete-team/:team_name", team_controller.delete_team);
