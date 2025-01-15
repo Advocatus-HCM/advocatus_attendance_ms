@@ -1,5 +1,12 @@
 const USER = {
-  ROLES: ["admin", "abogado", "asistente", "gerente", "rrhh", "desactivado"],
+  ROLES: {
+    admin: "admin",
+    lawyer: "abogado",
+    assistant: "asistente",
+    manager: "gerente",
+    rrhh: "rrhh",
+    unactive: "desactivado"
+  }
 };
 
 export default USER

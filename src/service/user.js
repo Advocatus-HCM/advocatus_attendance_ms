@@ -8,7 +8,7 @@ export const create_user = async (user) => {
     try {
         user.is_deleted = false
         user.active = false
-        user.role = "desactivado"
+        user.role = USER.ROLES.unactive
 
         if (user.superior) await validate_superior(user.superior)
         
@@ -27,12 +27,14 @@ export const create_user = async (user) => {
     }
 }
 
-export const get_user = async (user_id) => {
+export const get_user = async (user_id, role = null) => {
   try {
+    const roles = role ? [role] : Object.values(USER.ROLES);
 
     const user_model = await init_user_model();
     const user = await user_model.findOne({
       email: user_id,
+      role: {$in: roles},
       is_deleted: false
     });
 
@@ -136,7 +138,7 @@ export const update_user = async (user_id, updated_user) => {
 
 export const get_roles = async () => {
   try {
-    const roles = USER.ROLES;
+    const roles = Object.values(USER.ROLES);
 
     return roles;
   } catch (error) {
@@ -166,7 +168,7 @@ const validate_superior = async (superior_email) => {
     const user_model = await init_user_model();
     const superior = await user_model.findOne({
       email: superior_email, 
-      role: "gerente",
+      role: USER.ROLES.manager,
       is_deleted: false
     })
 

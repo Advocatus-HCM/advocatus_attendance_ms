@@ -1,3 +1,4 @@
+import USER from "../constant/user.js";
 import { init_user_model } from "../model/user.js";
 import { pm_log } from "../utils/server.js";
 
@@ -21,7 +22,7 @@ export const add_assistant = async (assistant_id, user_id) => {
         const is_assistant_added = await user_model.updateOne(
           {
             email: assistant_id,
-            role: "asistente",
+            role: USER.ROLES.assistant,
             is_deleted: false,
           },
           {
@@ -40,7 +41,7 @@ export const get_assistants = async (user_id) => {
   try {
     const user_model = await init_user_model();
     const assistants = await user_model.find({
-      role: "asistente",
+      role: USER.ROLES.assistant,
       assist_to: user_id,
       is_deleted: false,
     }).toArray();
@@ -67,7 +68,7 @@ export const get_all_assistants = async () => {
     const assistants = await user_model
       .find(
         {
-          role: "asistente",
+          role: USER.ROLES.assistant,
           assist_to: { $exists: true },
           is_deleted: false,
         },
@@ -112,7 +113,7 @@ export const remove_assistant = async (assistant_id, user_id) => {
     const is_assistant_removed = await user_model.updateOne(
       {
         email: assistant_id,
-        role: "asistente",
+        role: USER.ROLES.assistant,
         is_deleted: false,
       },
       {

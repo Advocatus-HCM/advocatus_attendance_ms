@@ -1,4 +1,5 @@
 import CONTRACT from "../constant/contract.js";
+import USER from "../constant/user.js";
 import { init_contract_model } from "../model/contract.js";
 import { init_user_model } from "../model/user.js";
 import * as util_service from "../utils/format.js";
@@ -8,7 +9,7 @@ export const create_contract = async (contract) => {
   try {
     contract.is_deleted = false;
 
-    if(contract.type != "indefinido" && !contract.end_date) throw new Error("That contract type must has end date")
+    if(contract.type != CONTRACT.TYPES.indefinite && !contract.end_date) throw new Error("That contract type must has end date")
     if (!(util_service.validate_dates(contract.start_date, contract.end_date))) throw new Error("Invalid dates")
     if (!(util_service.validate_dates(contract.start_date, contract.probation_end_date))) throw new Error("Invalid dates")
 
@@ -18,7 +19,7 @@ export const create_contract = async (contract) => {
     const is_user_updated = await user_model.updateOne(
       {
         email: contract.user_email,
-        role: "desactivado",
+        role: USER.ROLES.unactive,
         is_deleted: false,
       },
       {
@@ -77,7 +78,7 @@ export const get_contracts = async () => {
 
 export const get_types = async () => {
   try {
-    const types = CONTRACT.TYPES
+    const types = Object.values(CONTRACT.TYPES);
 
     return types;
   } catch (error) {
@@ -101,7 +102,7 @@ export const update_contract = async (new_data, contract_id) => {
         const is_user_updated = await user_model.updateOne(
             {
                 email: new_data.user_email,
-                role: "desactivado",
+                role: USER.ROLES.unactive,
                 is_deleted: false,
             },
             {
@@ -120,7 +121,7 @@ export const update_contract = async (new_data, contract_id) => {
             },
             {
             $set: {
-                role: "desactivado",
+                role: USER.ROLES.unactive,
             },
             }
         );
@@ -195,7 +196,7 @@ export const delete_contract = async (contract_id) => {
           },
           {
             $set: {
-              role: "desactivado",
+              role: USER.ROLES.unactive,
             },
           }
         );
