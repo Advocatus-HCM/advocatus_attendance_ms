@@ -9,7 +9,7 @@ export const update_contract_request = {
   },
   type: {
     isString: true,
-    isIn: { options: [CONTRACT.TYPES] },
+    isIn: { options: Object.values(CONTRACT.TYPES) },
     notEmpty: true,
     optional: true,
   },
@@ -23,12 +23,10 @@ export const update_contract_request = {
     isDate: true,
     notEmpty: true,
     optional: true,
-    optional: true,
   },
   end_date: {
     isDate: true,
     notEmpty: true,
-    optional: true,
     optional: true,
   },
   probation_end_date: {
@@ -38,7 +36,7 @@ export const update_contract_request = {
   },
   role: {
     isString: true,
-    isIn: { options: [USER.ROLES] },
+    isIn: { options: Object.values(USER.ROLES) },
     notEmpty: true,
     optional: true,
   },

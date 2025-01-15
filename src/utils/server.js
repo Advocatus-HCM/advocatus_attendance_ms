@@ -1,3 +1,4 @@
+import USER from "../constant/user.js";
 import { init_contract_model } from "../model/contract.js";
 import { init_user_model } from "../model/user.js";
 import { get_current_date } from "./format.js";
@@ -22,7 +23,7 @@ export const create_admin_user_with_contract = async () => {
     profession: "Admin",
     superior: "admin@admin.com",
     team: "Admin team",
-    role: "admin",
+    role: USER.ROLES.admin,
     is_deleted: false
   };
 

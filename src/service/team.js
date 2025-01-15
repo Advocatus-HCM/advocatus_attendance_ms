@@ -1,3 +1,4 @@
+import USER from "../constant/user.js";
 import { init_team_model } from "../model/team.js";
 import { init_user_model } from "../model/user.js";
 import { pm_log } from "../utils/server.js";
@@ -167,7 +168,7 @@ export const remove_member = async (member_email, team_name) => {
 export const update_leader = async (new_leader, team_name) => {
   const team_model = await init_team_model();
   const user_model = await init_user_model();
-  await user_service.get_user(new_leader)
+  await user_service.get_user(new_leader, USER.ROLES.manager)
   await get_team(team_name)
 
   await team_model.updateOne(
@@ -182,6 +183,7 @@ export const update_leader = async (new_leader, team_name) => {
   await user_model.updateOne(
     {
       email: new_leader,
+      role: USER.ROLES.manager, 
       is_deleted: false,
     },
     {
