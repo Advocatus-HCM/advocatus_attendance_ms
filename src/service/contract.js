@@ -10,6 +10,7 @@ export const create_contract = async (contract) => {
     contract.is_deleted = false;
 
     if(contract.type != CONTRACT.TYPES.indefinite && !contract.end_date) throw new Error("That contract type must has end date")
+    if(contract.type == CONTRACT.TYPES.indefinite && contract.end_date) throw new Error("That contract type must not has end date")
     if (!(util_service.validate_dates(contract.start_date, contract.end_date))) throw new Error("Invalid dates")
     if (!(util_service.validate_dates(contract.start_date, contract.probation_end_date))) throw new Error("Invalid dates")
 
