@@ -1,6 +1,7 @@
 import USER from "../constant/user.js"
 import { init_contract_model } from "../model/contract.js"
 import { init_user_model } from "../model/user.js"
+import { init_team_model } from "../model/team.js"
 import * as util_service from "../utils/format.js"
 import * as team_service from "./team.js"
 import { pm_log } from "../utils/server.js"
@@ -119,6 +120,7 @@ export const update_user = async (user_id, updated_user) => {
   try {
     const user_model = await init_user_model();
 
+    if (updated_user.email) await update_email_references(user_id, updated_user.email)
     if (updated_user.superior) await validate_superior(updated_user.superior)
     if (updated_user.team) await team_service.get_team(updated_user.team)
 
@@ -180,4 +182,47 @@ const validate_superior = async (superior_email) => {
     }
 
     return true
+}
+
+const update_email_references = async (old_email, new_email) => {
+  try {
+    const user_model = await init_user_model();
+    const contract_model = await init_contract_model();
+    const team_model = await init_team_model();
+
+    await user_model.updateMany(
+      {
+        superior: old_email,
+        is_deleted: false,
+      },
+      {
+        $set: { superior: new_email },
+      }
+    );
+
+    await contract_model.updateMany(
+      {
+        user_email: old_email,
+        is_deleted: false,
+      },
+      {
+        $set: { user_email: new_email },
+      }
+    );
+
+    await team_model.updateMany(
+      {
+        leader: old_email,
+        is_deleted: false,
+      },
+      {
+        $set: { leader: new_email },
+      }
+    );
+
+    return true;
+  } catch (error) {
+    pm_log("User Service: " + error, true);
+    throw new Error(error);
+  }
 }
