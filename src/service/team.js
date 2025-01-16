@@ -63,7 +63,7 @@ export const update_team = async (team_name, new_data) => {
     const current_team = await get_team(team_name)
     let leader_updated = false
 
-    if (new_data.leader){
+    if (new_data?.leader != current_team.leader){
       await update_leader(
         new_data.leader,
         new_data.name ? new_data.name : current_team.name
