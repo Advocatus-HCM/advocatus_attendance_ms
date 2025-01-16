@@ -11,7 +11,7 @@ export const create_team = async (new_team) => {
     
     await user_service.get_user(new_team.leader)
     const team = await team_model.insertOne(new_team)
-    await update_leader(new_team.leader, new_team.name)
+    await update_leader(new_team.leader, new_team.name, true)
 
     const result = {
       name: team.name,
@@ -160,15 +160,13 @@ export const remove_member = async (member_email, team_name) => {
   }
 };
 
-export const update_leader = async (new_leader, team_name) => {
+export const update_leader = async (new_leader, team_name, is_new_team = false) => {
   const team_model = await init_team_model();
   const user = await user_service.get_user(new_leader, USER.ROLES.manager)
   const team = await get_team(team_name)
-  const current_user_team = user.team ? await get_team(user.team) : null
 
   if (user.role != USER.ROLES.manager) throw new Error("User is not a manager")
-  if (team?.leader == user.email) throw new Error("User is already leader of this team")
-  if (current_user_team?.leader == user.email) throw new Error("User is already leader of other team")
+  if (team?.leader == user.email && !is_new_team) throw new Error("User is already leader of this team")
 
   await team_model.updateOne(
     {
