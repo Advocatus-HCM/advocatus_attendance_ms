@@ -1,4 +1,5 @@
 require("dotenv").config({ path: "../.env" }); // Ajusta la ruta al nivel correcto
+process.loadEnvFile()
 console.log("MONGO_DB_URI:", process.env.MONGO_DB_URI); // Depuración
 
 
