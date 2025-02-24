@@ -1,21 +1,19 @@
 {
-  "name": "advocatus_personal_manager_ms",
+  "name": "advocatus_attendance_ms",
   "version": "1.0.0",
-  "description": "Personal manager for Advocatus",
-  "main": "index.js",
-  "type": "module",
+  "description": "",
+  "main": "bootstrap.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon index.js"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Juan",
+  "keywords": [],
+  "author": "",
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
-    "express-validator": "^7.2.0",
-    "mongodb": "^6.11.0",
-    "nodemon": "^3.1.7"
+    "mongodb": "^6.13.0",
+    "mongoose": "^8.10.0"
   }
 }
