@@ -10,7 +10,7 @@ const router = Router()
 router.post("/report-absences",absenceService.serviceInsertAbsences);
 router.get("/get-Absences",absenceService.serviceGetAbsence);
 router.delete("/delete-absence", absenceService.serviceDeleteAbsences);
-router.put("/update-absence/:abogado_id", absenceService.serviceUpdateAbsence);
+router.put("/update-absence", absenceService.serviceUpdateAbsence);
 
 
 //attendance

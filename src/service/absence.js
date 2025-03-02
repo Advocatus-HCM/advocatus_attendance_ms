@@ -6,13 +6,20 @@ const AbsenceSchema = new mongoose.Schema({
   abogado_id: {
     type: String,
     required: true,
-    match: [/.+@.+\..+/, "Por favor, ingresa un email válido"] // Validación de email
+    validate: {
+      validator: function (value) {
+        // Solo validar como email si el documento es nuevo
+        return this.isNew ? /.+@.+\..+/.test(value) : true;
+      },
+      message: "Por favor, ingresa un email válido"
+    }
   },
   fecha: { type: Date, required: true },
-  tipo: { type: String, required: true }, // "justificada", "injustificada"
+  tipo: { type: String, required: true },
   motivo: { type: String, required: true },
   documento_respaldo: { type: String },
 });
+
 
 const Absence = mongoose.model("Absence", AbsenceSchema);
 
@@ -29,14 +36,17 @@ module.exports = {
 
   serviceDeleteAbsences: async (req, res) => {
     try {
-        const { abogado_id } = req.body;
-        console.log("Request body:", req.body);
-        
-        if (!abogado_id) {
-            return res.status(400).json({ error: "Falta el abogado_id" });
+        const { _id } = req.body; // Ahora recibimos el _id de la ausencia
+
+        if (!_id) {
+            return res.status(400).json({ error: "Falta el _id de la ausencia" });
         }
 
-        const deletedAbsence = await Absence.findOneAndDelete({ abogado_id });
+        // Convertir _id a ObjectId
+        const objectId = new mongoose.Types.ObjectId(_id);
+
+        // Eliminar la ausencia con ese _id
+        const deletedAbsence = await Absence.findOneAndDelete({ _id: objectId });
 
         if (!deletedAbsence) {
             return res.status(404).json({ error: "Ausencia no encontrada" });
@@ -51,22 +61,22 @@ module.exports = {
 
 serviceUpdateAbsence: async (req, res) => {
   try {
-    const { abogado_id } = req.params; // Obtener abogado_id desde la URL
-    const updateData = req.body; // Obtener datos a actualizar
-    
-    // Validar que abogado_id esté presente
-    if (!abogado_id) {
-      return res.status(400).json({ error: "Falta el abogado_id" });
+    const { _id, ...updateData } = req.body; // Obtener _id y los datos a actualizar
+
+    if (!_id) {
+      return res.status(400).json({ error: "Falta el _id de la ausencia" });
     }
 
-    // Convertir la fecha si está presente
+    // Convertir _id a ObjectId
+    const objectId = new mongoose.Types.ObjectId(_id);
+
     if (updateData.fecha) {
       updateData.fecha = new Date(updateData.fecha);
     }
 
-    // Buscar y actualizar la ausencia por abogado_id
+    // Buscar por _id y actualizar la ausencia
     const updatedAbsence = await Absence.findOneAndUpdate(
-      { abogado_id }, // Buscar por abogado_id
+      { _id: objectId }, 
       { $set: updateData },
       { new: true, runValidators: true }
     );
